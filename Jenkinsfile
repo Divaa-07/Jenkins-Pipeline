@@ -10,7 +10,7 @@ pipeline {
     stages {
        stage('Build') {
             steps {
-                echo 'Building the code using Maven'
+                echo 'Building the code using Maven###'
                 // Maven tool can be used for building the code
             }
         }
