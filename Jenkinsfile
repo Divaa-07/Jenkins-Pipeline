@@ -25,7 +25,7 @@ pipeline {
                 success {
                     
                     
-                    mail to: "divyangalokuhetti04@gmail.com",
+                    emailext to: "divyangalokuhetti04@gmail.com",
                     subject: "Build Status Email",
                     body: "Build was succesful!",
                     attachlog: true
@@ -34,7 +34,7 @@ pipeline {
                 
             
                 failure {
-                    mail to: "divyangalokuhetti04@gmail.com",
+                    emailext to: "divyangalokuhetti04@gmail.com",
                     subject: "Build Status Email",
                     body: "Build was failed!",
                     attachlog: true
