@@ -25,11 +25,14 @@ pipeline {
                 success {
                    
                     
-                        mail to: 'divyangalokuhetti04@gmail.com',
-                        subject: "Unit and Integration Tests: SUCCESS",
-                        body: "The Unit and Integration Tests stage has succeeded.",
+                        emailext(
+                        to: 'divyangalokuhetti04@gmail.com',
+                        subject: "Integration Tests on Staging: SUCCESS",
+                        body: "The Integration Tests on Staging stage has succeeded.",
                         
                         attachLog: true
+
+                    )
                     
                 }
                 
@@ -37,11 +40,14 @@ pipeline {
                 failure {
                    
                     
-                        mail to: 'divyangalokuhetti04@gmail.com',
-                        subject: "Unit and Integration Tests: FAILED",
-                        body: "The Unit and Integration Tests stage has failed.",
+                        emailext(
+                        to: 'divyangalokuhetti04@gmail.com',
+                        subject: "Integration Tests on Staging: FAIL",
+                        body: "The Integration Tests on Staging stage has failed.",
                         
                         attachLog: true
+
+                    )
                     
                 }
             }
