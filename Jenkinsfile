@@ -23,12 +23,12 @@ pipeline {
             }
             post {
                 success {
-                    archiveArtifacts artifacts: '**/target/*.log', allowEmptyArchive: true
+                    
                     
                     mail to: "divyangalokuhetti04@gmail.com",
                     subject: "Build Status Email",
                     body: "Build was succesful!",
-                    attachments: '**/target/*.log'
+                    attachlog: true
                     
                 }
                 
