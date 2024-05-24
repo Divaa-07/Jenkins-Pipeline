@@ -1,116 +1,87 @@
 pipeline {
     agent any
-    
+
     environment {
-        DIRECTORY_PATH = "/path/to/code/directory"
-        TESTING_ENVIRONMENT = "TestingEnv"
-        PRODUCTION_ENVIRONMENT = "YourNameProductionEnv"
+        STAGING_SERVER = 'ec2-user@staging-server-address'
+        PRODUCTION_SERVER = 'ec2-user@production-server-address'
+        EMAIL_RECIPIENT = 'divyangalokuhetti04@gmail.com'
     }
-    
+
     stages {
-       stage('Build') {
+        stage('Build') {
             steps {
-                echo 'Building the code using Maven'
-                // Maven tool can be used for building the code
+                echo 'Building the code...'
+                // Example build tool: Maven
+                sh 'mvn clean package'
             }
         }
-       stage('Unit and Integration Tests') {
+        
+        stage('Unit and Integration Tests') {
             steps {
-                echo 'Running unit tests to ensure code functionality'
-                // JUnit or TestNG can be used for unit testing
-                echo 'Running integration tests to ensure component interaction'
-                // Selenium or Cucumber can be used for integration testing
-            }
-            post {
-                success {
-                   
-                    
-                        emailext(
-                        to: 'divyangalokuhetti04@gmail.com',
-                        subject: "Integration Tests on Staging: SUCCESS",
-                        body: "The Integration Tests on Staging stage has succeeded.",
-                        
-                        attachLog: true
-
-                    )
-                    
-                }
-                
-            
-                failure {
-                   
-                    
-                        emailext(
-                        to: 'divyangalokuhetti04@gmail.com',
-                        subject: "Integration Tests on Staging: FAIL",
-                        body: "The Integration Tests on Staging stage has failed.",
-                        
-                        attachLog: true
-
-                    )
-                    
-                }
+                echo 'Running unit and integration tests...'
+                // Example test automation tools: JUnit for unit tests, TestNG for integration tests
+                sh 'mvn test'
             }
         }
+        
         stage('Code Analysis') {
             steps {
-                echo 'Analyzing code using SonarQube'
-                // SonarQube can be used for code analysis
+                echo 'Analyzing the code...'
+                // Example code analysis tool: SonarQube
+                sh 'mvn sonar:sonar'
             }
         }
+        
         stage('Security Scan') {
             steps {
-                echo 'Performing security scan using OWASP ZAP'
-                // OWASP ZAP can be used for security scanning
+                echo 'Performing security scan...'
+                // Example security scan tool: OWASP Dependency Check
+                sh 'dependency-check --project MyProject --scan /path/to/project'
             }
             post {
-                success {
-                    mail to: "divyangalokuhetti04@gmail.com",
-                    subject: "Build Status Email",
-                    body: "Build was succesful!"
-                }
-                
-            
-                failure {
-                    mail to: "divyangalokuhetti04@gmail.com",
-                    subject: "Build Status Email",
-                    body: "Build was failed!"
+                always {
+                    echo 'Sending security scan email...'
+                    mail to: "${env.EMAIL_RECIPIENT}",
+                         subject: "Security Scan Status: ${currentBuild.currentResult}",
+                         body: "The security scan stage has finished with status: ${currentBuild.currentResult}",
+                         attachLog: true
                 }
             }
-           
         }
+        
         stage('Deploy to Staging') {
             steps {
-                echo 'Deploying application to staging server (e.g., AWS EC2)'
-                // AWS CodeDeploy or Jenkins Deploy plugin can be used for deployment
+                echo 'Deploying to staging...'
+                // Example deployment command
+                sh 'scp target/myapp.jar ${env.STAGING_SERVER}:/path/to/deploy'
             }
         }
+        
         stage('Integration Tests on Staging') {
             steps {
-                echo 'Running integration tests on staging environment'
-                // Post-deployment testing to ensure functionality in a production-like environment
-            }
-            post {
-                success {
-                    mail to: "divyangalokuhetti04@gmail.com",
-                    subject: "Build Status Email",
-                    body: "Build was succesful!"
-                }
-                
-            
-                failure {
-                    mail to: "divyangalokuhetti04@gmail.com",
-                    subject: "Build Status Email",
-                    body: "Build was failed!"
-                }
+                echo 'Running integration tests on staging...'
+                // Integration tests on staging
+                sh 'ssh ${env.STAGING_SERVER} "java -jar /path/to/deploy/myapp.jar"'
             }
         }
         
         stage('Deploy to Production') {
             steps {
-                echo 'Deploying application to production server (e.g., AWS EC2)'
-                // AWS CodeDeploy or Jenkins Deploy plugin can be used for deployment
+                echo 'Deploying to production...'
+                // Example deployment command
+                sh 'scp target/myapp.jar ${env.PRODUCTION_SERVER}:/path/to/deploy'
             }
         }
     }
+    
+    post {
+        always {
+            echo 'Sending pipeline completion email...'
+            mail to: "${env.EMAIL_RECIPIENT}",
+                 subject: "Pipeline Execution Status: ${currentBuild.currentResult}",
+                 body: "The pipeline has finished with status: ${currentBuild.currentResult}",
+                 attachLog: true
+        }
+    }
 }
+
