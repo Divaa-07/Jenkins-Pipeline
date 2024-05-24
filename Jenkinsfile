@@ -42,7 +42,7 @@ pipeline {
                         body: "The Unit and Integration Tests stage has failed.",
                         
                         attachLog: true
-                    )
+                    
                 }
             }
         }
