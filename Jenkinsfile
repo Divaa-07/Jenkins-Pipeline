@@ -23,24 +23,24 @@ pipeline {
             }
             post {
                 success {
-                   archiveArtifacts artifacts: 'C:\ProgramData\Jenkins\.jenkins\workspace\Github Jenkins', allowEmptyArchive: true
+                   
                     emailext(
                         to: 'divyangalokuhetti04@gmail.com',
                         subject: "Unit and Integration Tests: SUCCESS",
                         body: "The Unit and Integration Tests stage has succeeded.",
-                        attachmentsPattern: 'C:\ProgramData\Jenkins\.jenkins\workspace\Github Jenkins',
+                        
                         attachLog: true
                     )
                 }
                 
             
                 failure {
-                   archiveArtifacts artifacts: '**/target/*.log', allowEmptyArchive: true
+                   
                     emailext(
                         to: 'divyangalokuhetti04@gmail.com',
                         subject: "Unit and Integration Tests: FAILED",
                         body: "The Unit and Integration Tests stage has failed.",
-                        attachmentsPattern: '**/target/*.log',
+                        
                         attachLog: true
                     )
                 }
