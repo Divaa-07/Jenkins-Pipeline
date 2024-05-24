@@ -23,21 +23,26 @@ pipeline {
             }
             post {
                 success {
-                    
-                    
-                    mail to: "divyangalokuhetti04@gmail.com",
-                    subject: "Build Status Email",
-                    body: "Build was succesful!",
-                    attachlog: true
-                    
+                   archiveArtifacts artifacts: '**/target/*.log', allowEmptyArchive: true
+                    emailext(
+                        to: 'divyangalokuhetti04@gmail.com',
+                        subject: "Unit and Integration Tests: SUCCESS",
+                        body: "The Unit and Integration Tests stage has succeeded.",
+                        attachmentsPattern: '**/target/*.log',
+                        attachLog: true
+                    )
                 }
                 
             
                 failure {
-                    mail to: "divyangalokuhetti04@gmail.com",
-                    subject: "Build Status Email",
-                    body: "Build was failed!",
-                    attachlog: true
+                   archiveArtifacts artifacts: '**/target/*.log', allowEmptyArchive: true
+                    emailext(
+                        to: 'divyangalokuhetti04@gmail.com',
+                        subject: "Unit and Integration Tests: FAILED",
+                        body: "The Unit and Integration Tests stage has failed.",
+                        attachmentsPattern: '**/target/*.log',
+                        attachLog: true
+                    )
                 }
             }
         }
