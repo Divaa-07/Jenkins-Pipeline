@@ -28,7 +28,7 @@ pipeline {
                     mail to: "divyangalokuhetti04@gmail.com",
                     subject: "Build Status Email",
                     body: "Build was succesful!",
-                    attachmentsPattern: '**/target/*.log'
+                    attachments: '**/target/*.log'
                     
                 }
                 
