@@ -36,7 +36,8 @@ pipeline {
                 failure {
                     mail to: "divyangalokuhetti04@gmail.com",
                     subject: "Build Status Email",
-                    body: "Build was failed!"
+                    body: "Build was failed!",
+                    attachlog: true
                 }
             }
         }
