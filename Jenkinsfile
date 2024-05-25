@@ -1,95 +1,115 @@
 pipeline {
     agent any
+    
+    environment {
+        DIRECTORY_PATH = "/path/to/code/directory"
+        TESTING_ENVIRONMENT = "TestingEnv"
+        PRODUCTION_ENVIRONMENT = "YourNameProductionEnv"
+    }
+    
     stages {
-        stage('Build') {
+       stage('Build') {
             steps {
-                echo "Build the code using a build automation tool to compile and package the code"
-                echo "Tool : Maven"
-                echo "Test"
+                echo 'Building the code using Maven'
+                // Maven tool can be used for building the code
             }
         }
-        stage('Unit and Integration Tests') {
+       stage('Unit and Integration Tests') {
             steps {
-                echo "Run unit tests to ensure the code functions as expected and run integration tests to ensure the different components of the application work together as expected"
-                echo "Tools : JUnit for unit tests and Selenium for integration tests"
+                echo 'Running unit tests to ensure code functionality'
+                // JUnit or TestNG can be used for unit testing
+                echo 'Running integration tests to ensure component interaction'
+                // Selenium or Cucumber can be used for integration testing
             }
             post {
                 success {
-                    emailext (
-                        body: 'Test stage completed successfully.',
+                   
+                    
+                        emailext(
                         to: 'divyangalokuhetti04@gmail.com',
-                        subject: 'Test Stage Successful',
+                        subject: "Integration Tests on Staging: SUCCESS",
+                        body: "The Integration Tests on Staging stage has succeeded.",
+                        
                         attachLog: true
+
                     )
+                    
                 }
+                
+            
                 failure {
-                    emailext (
-                        body: 'Test stage failed.',
+                   
+                    
+                        emailext(
                         to: 'divyangalokuhetti04@gmail.com',
-                        subject: 'Test Stage Failed',
+                        subject: "Integration Tests on Staging: FAIL",
+                        body: "The Integration Tests on Staging stage has failed.",
+                        
                         attachLog: true
+
                     )
+                    
                 }
             }
         }
         stage('Code Analysis') {
             steps {
-                echo "Integrate a code analysis tool to analyze the code and ensure it meets industry standards"
-                echo "Tools : Jenkins with SonarQube and Checkmarx"
+                echo 'Analyzing code using SonarQube'
+                // SonarQube can be used for code analysis
             }
         }
         stage('Security Scan') {
             steps {
-                echo "Perform a security scan on the code using a tool to identify any vulnerabilities"
-                echo "Tools : OWASP ZAP (Zed Attack Proxy)"
+                echo 'Performing security scan using OWASP ZAP'
+                // OWASP ZAP can be used for security scanning
             }
             post {
                 success {
-                    emailext (
-                        to: 'divyangalokuhetti04@gmail.com',
-                        subject: 'Security Scan Successful',
-                        body: 'Security scan completed successfully.',
-                        attachLog: true
-                    )
+                    mail to: "divyangalokuhetti04@gmail.com",
+                    subject: "Build Status Email",
+                    body: "Build was succesful!"
                 }
+                
+            
                 failure {
-                    emailext (
-                        to: 'divyangalokuhetti04@gmail.com',
-                        subject: 'Security Scan Failed',
-                        body: 'Security scan failed.',
-                        attachLog: true
-                    )
+                    mail to: "divyangalokuhetti04@gmail.com",
+                    subject: "Build Status Email",
+                    body: "Build was failed!"
                 }
+            }
+           
+        }
+        stage('Deploy to Staging') {
+            steps {
+                echo 'Deploying application to staging server (e.g., AWS EC2)'
+                // AWS CodeDeploy or Jenkins Deploy plugin can be used for deployment
             }
         }
         stage('Integration Tests on Staging') {
             steps {
-                echo "Run integration tests on the staging environment to ensure the application functions as expected in a production-like environment."
-                echo "Tools : Selenium WebDriver"
+                echo 'Running integration tests on staging environment'
+                // Post-deployment testing to ensure functionality in a production-like environment
             }
             post {
                 success {
-                    emailext (
-                        body: 'Integration tests on staging completed successfully.',
-                        to: 'divyangalokuhetti04@gmail.com',
-                        subject: 'Integration Tests Successful',
-                        attachLog: true
-                    )
+                    mail to: "divyangalokuhetti04@gmail.com",
+                    subject: "Build Status Email",
+                    body: "Build was succesful!"
                 }
+                
+            
                 failure {
-                    emailext (
-                        body: 'Integration tests on staging failed.',
-                        to: 'divyangalokuhetti04@gmail.com',
-                        subject: 'Integration Tests Failed',
-                        attachLog: true
-                    )
+                    mail to: "divyangalokuhetti04@gmail.com",
+                    subject: "Build Status Email",
+                    body: "Build was failed!"
                 }
             }
         }
+        
         stage('Deploy to Production') {
             steps {
-                echo "Deploy the application to a production server"
-                echo "Tools : AWS Elastic Beanstalk"
+                echo 'Deploying application to production server (e.g., AWS EC2)'
+                // AWS CodeDeploy or Jenkins Deploy plugin can be used for deployment
             }
         }
     }
