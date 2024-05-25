@@ -18,7 +18,7 @@ pipeline{
                          emailext body: 'Test stage completed successfully.',
                              to: 'divyangalokuhetti04@gmail.com',
                              subject: 'Test Stage Successful',
-                             body: "The Integration Tests on Staging stage has succeeded.",
+                             
 
                              attachLog: true
                     
@@ -27,7 +27,7 @@ pipeline{
                          emailext body: 'Test stage failed.',
                              to: 'divyangalokuhetti04@gmail.com',
                              subject: 'Test Stage Failed',
-                             body: "The Integration Tests on Staging stage has succeeded.",
+                             
 
                              attachLog: true
                 }
